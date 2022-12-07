@@ -43,6 +43,7 @@ nav li a{
 .btn{
   border-radius: 36px;
   background: #FEE996;
+  cursor: pointer;
 }
 form h2{
   font-size: 2.4em;
