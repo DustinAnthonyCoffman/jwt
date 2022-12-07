@@ -32,6 +32,20 @@ userSchema.pre('save', async function(next) {
     next();
 })
 
+// create a static method on our model to check password and login user
+userSchema.statics.login = async function(email, password) {
+    const user = await this.findOne({ email });
+    if (user) {
+        //compare hashed passwords and user's entered password using bcrypt
+        const auth = await bcrypt.compare(password, user.password);
+        if(auth) {
+            return user;
+        }
+        throw Error('incorrect password')
+    }
+    throw Error('incorrect email')
+}
+
 const User = mongoose.model('user', userSchema)
 
 module.exports = User;
