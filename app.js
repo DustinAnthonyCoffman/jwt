@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -21,3 +22,19 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 app.get('/', (req, res) => res.render('home'));
 app.get('/smoothies', (req, res) => res.render('smoothies'));
 app.use(authRoutes);
+
+//cookies
+//we need to store a generated jwt from a post request into a cookie
+app.get('/set-cookies', (req, res) => {
+  res.cookie('newUser', false);
+  //setting a cookie to expire after a full day 100 * 60 etc.
+  //in production we should only use cookies over https and they shouldnt be modified by client side
+  res.cookie('isEmployee', true, { maxAge: 1000 * 60 * 60 * 24 });
+
+  res.send('you got a cookie');
+});
+
+app.get('/read-cookies', (req, res) => {
+  const cookies = req.cookies;
+  res.json(cookies);
+});
